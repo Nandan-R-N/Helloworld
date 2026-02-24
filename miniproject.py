@@ -1,17 +1,23 @@
-students = {}
-
-# Add student
+# Add student and save to file
 def add_student():
     roll = input("Enter Roll No: ")
     name = input("Enter Name: ")
-    students[roll] = name
+
+    with open("students.txt", "a") as file:
+        file.write(roll + "," + name + "\n")
+
     print("Student added successfully!")
 
-# Display students
+# Read and display students from file
 def display_students():
-    print("\nStudent Records:")
-    for roll in students:
-        print("Roll No:", roll, "Name:", students[roll])
+    try:
+        with open("students.txt", "r") as file:
+            print("\nStudent Records:")
+            for line in file:
+                roll, name = line.strip().split(",")
+                print("Roll No:", roll, "Name:", name)
+    except FileNotFoundError:
+        print("No records found.")
 
 # Main program
 while True:
