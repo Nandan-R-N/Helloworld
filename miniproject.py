@@ -1,12 +1,20 @@
 # Add student and save to file
 def add_student():
-    roll = input("Enter Roll No: ")
-    name = input("Enter Name: ")
+    try:
+        roll = input("Enter Roll No: ").strip()
+        name = input("Enter Name: ").strip()
 
-    with open("students.txt", "a") as file:
-        file.write(roll + "," + name + "\n")
+        if roll == "" or name == "":
+            raise ValueError("Roll No and Name cannot be empty.")
 
-    print("Student added successfully!")
+        with open("students.txt", "a") as file:
+            file.write(roll + "," + name + "\n")
+
+        print("Student added successfully!")
+
+    except ValueError as e:
+        print("Error:", e)
+
 
 # Read and display students from file
 def display_students():
@@ -16,8 +24,13 @@ def display_students():
             for line in file:
                 roll, name = line.strip().split(",")
                 print("Roll No:", roll, "Name:", name)
+
     except FileNotFoundError:
         print("No records found.")
+
+    except Exception:
+        print("Error reading file.")
+
 
 # Main program
 while True:
@@ -25,13 +38,18 @@ while True:
     print("2. Display Students")
     print("3. Exit")
 
-    choice = input("Enter choice: ")
+    try:
+        choice = int(input("Enter choice: "))
 
-    if choice == "1":
-        add_student()
-    elif choice == "2":
-        display_students()
-    elif choice == "3":
-        break
-    else:
-        print("Invalid choice")
+        if choice == 1:
+            add_student()
+        elif choice == 2:
+            display_students()
+        elif choice == 3:
+            print("Exiting program...")
+            break
+        else:
+            print("Invalid choice. Please enter 1, 2 or 3.")
+
+    except ValueError:
+        print("Invalid input! Please enter numbers only.")
