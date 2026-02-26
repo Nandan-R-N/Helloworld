@@ -7,6 +7,17 @@ def add_student():
         if roll == "" or name == "":
             raise ValueError("Roll No and Name cannot be empty.")
 
+        # Check duplicate roll number
+        try:
+            with open("students.txt", "r") as file:
+                for line in file:
+                    existing_roll = line.strip().split(",")[0]
+                    if roll == existing_roll:
+                        print("Roll number already exists!")
+                        return
+        except FileNotFoundError:
+            pass  # File doesn't exist yet
+
         with open("students.txt", "a") as file:
             file.write(roll + "," + name + "\n")
 
@@ -20,16 +31,24 @@ def add_student():
 def display_students():
     try:
         with open("students.txt", "r") as file:
+            lines = file.readlines()
+
+            if not lines:
+                print("No records available.")
+                return
+
             print("\nStudent Records:")
-            for line in file:
-                roll, name = line.strip().split(",")
-                print("Roll No:", roll, "Name:", name)
+            for line in lines:
+                parts = line.strip().split(",")
+
+                if len(parts) == 2:   # Prevent crash
+                    roll, name = parts
+                    print("Roll No:", roll, "Name:", name)
+                else:
+                    print("Invalid record found in file.")
 
     except FileNotFoundError:
         print("No records found.")
-
-    except Exception:
-        print("Error reading file.")
 
 
 # Main program
